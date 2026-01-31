@@ -6,6 +6,21 @@ import json
 import os
 from telebot.types import ChatPermissions
 
+# ======================
+# Get TOKEN from ENV
+# ======================
+TOKEN = os.getenv("BOT_TOKEN")
+if not TOKEN:
+    raise ValueError("❌ BOT_TOKEN not found in environment variables")
+
+bot = telebot.TeleBot(TOKEN, parse_mode="HTML")
+
+ADMIN_IDS = [8197491717]
+DATA_FILE = "data.json"
+
+# ======================
+# Utils
+# ======================
 def parse_time(text):
     text = text.strip().lower()
 
@@ -19,13 +34,6 @@ def parse_time(text):
         return int(text[:-1]) * 86400
 
     return int(text)
-
-
-TOKEN = "8137226690:AAGjtMCYhlHHZm3eVAZiaXbM9i2JFZu5PgY"
-bot = telebot.TeleBot(TOKEN, parse_mode="HTML")
-
-ADMIN_IDS = [8197491717]
-DATA_FILE = "data.json"
 
 # ======================
 # Load / Save
@@ -142,7 +150,6 @@ def set_mute(message):
             "/setmute 1d"
         )
 
-
 @bot.message_handler(commands=["addword"])
 def add_word(message):
     if message.from_user.id not in ADMIN_IDS:
@@ -216,7 +223,7 @@ def guard(message):
             f"🔇 <b>Auto Mute</b>\n\n"
             f"👤 {mention(message.from_user)}\n"
             f"👥 <b>{message.chat.title}</b>\n\n"
-            f"🚫 ဒီ group မှာ ပိတ်ပင်ထားသော စာသားများ ပို့ထားသဖြင့်\n"
+            f"🚫 ပိတ်ပင်ထားသော စာသားများ ပို့ထားသဖြင့်\n"
             f"⏱ <b>{mute_time} seconds</b> mute လုပ်လိုက်ပါသည်။"
         )
 
@@ -228,12 +235,10 @@ def guard(message):
             f"⚠️ <b>သတိပေးချက် ({strikes}/3)</b>\n\n"
             f"👤 {mention(message.from_user)}\n"
             f"👥 <b>{message.chat.title}</b>\n\n"
-            f"🚫 ဒီ group မှာ\n"
-            f"( ဘိုင်အို / ဂျိုင်း / လင့် )\n"
+            f"🚫 ( ဘိုင်အို / ဂျိုင်း / လင့် )\n"
             f"ဆိုင်ရာ စာသားများ ပို့ခြင်းကို ခွင့်မပြုပါ။\n\n"
-            f"🔁 ၃ ကြိမ် ပြုလုပ်ပါက\n"
-            f"⏱ Auto mute ဖြစ်ပါမည်။"
+            f"🔁 ၃ ကြိမ် ပြုလုပ်ပါက Auto mute ဖြစ်ပါမည်။"
         )
 
-print("Bot running...")
+print("🤖 Bot running...")
 bot.infinity_polling()
